@@ -22,8 +22,8 @@ status_surface = pygame.Surface([pygame.display.Info().current_w / 5, pygame.dis
 
 pygame.display.set_caption("Orbits")
 
-background = pygame.image.load('space3.jpg').convert()
-background = pygame.transform.scale(background, size)
+#background = pygame.image.load('space3.jpg').convert()
+#background = pygame.transform.scale(background, size)
 
 # Loop until the user clicks the close button.
 done = False
