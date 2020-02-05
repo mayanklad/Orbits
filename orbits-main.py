@@ -131,14 +131,14 @@ def update_acceleration(i):
     alpha1 = 0
     a1 = 0
     if len(planet) > 0:
-            for j in range(0, len(planet)):
-                if j == i:
-                    continue
-                alpha1 = angle(planet[j]['y'] - planet[i]['y'], planet[j]['x'] - planet[i]['x'])
-                a1 = \
-                    (G * p_m) / (pow(planet[j]['y'] - planet[i]['y'], 2) + pow(planet[j]['x'] - planet[i]['x'], 2))
-                a_x += a1 * math.cos(alpha1)
-                a_y += a1 * math.sin(alpha1)
+        for j in range(0, len(planet)):
+            if j == i:
+                continue
+            alpha1 = angle(planet[j]['y'] - planet[i]['y'], planet[j]['x'] - planet[i]['x'])
+            a1 = \
+                (G * p_m) / (pow(planet[j]['y'] - planet[i]['y'], 2) + pow(planet[j]['x'] - planet[i]['x'], 2))
+            a_x += a1 * math.cos(alpha1)
+            a_y += a1 * math.sin(alpha1)
 
 
     #planet[i]['alpha'] = \
