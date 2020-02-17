@@ -1,5 +1,11 @@
-# -*- coding: utf-8 -*-
-
+"""
+-*- coding: utf-8 -*-
+----------------------------------------------
+--- Author         : Mayank Lad
+--- Mail           : mayanklad12@gmail.com
+--- Github         : mayanklad
+----------------------------------------------
+"""
 # Form implementation generated from reading ui file '/home/mayank/PythonProjects/pygame/Orbits/ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
@@ -7,7 +13,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import orbits_main
+from orbits_main import Orbits
+#import orbits_main
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -19,7 +26,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName("gridLayout")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
-        #self.pushButton.clicked.connect(orbits_main.main)
+        self.pushButton.clicked.connect(Orbits)
         self.gridLayout.addWidget(self.pushButton, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)

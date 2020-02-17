@@ -1,357 +1,456 @@
+"""
+-*- coding: utf-8 -*-
+----------------------------------------------
+--- Author         : Mayank Lad
+--- Mail           : mayanklad12@gmail.com
+--- Github         : mayanklad
+----------------------------------------------
+"""
+#Imports
+#import sys
+import time
+import math
+from random import randint
 import pygame
 from pygame import gfxdraw
-import math
-import sys
-import time
-from random import randint
 
-# Define some colors
-BLACK = pygame.Color(  0,   0,   0)
-WHITE = pygame.Color(255, 255, 255)
-RED   = pygame.Color(255,   0,   0)
-GREEN = pygame.Color(  0, 255,   0)
-BLUE  = pygame.Color(  0,   0, 255)
+class Orbits:
+    """Main Class"""
+    def __init__(self):
 
-pygame.init()
+        # Define some colors
+        self.BLACK = pygame.Color(  0,   0,   0)
+        self.WHITE = pygame.Color(255, 255, 255)
+        self.RED   = pygame.Color(255,   0,   0)
+        self.GREEN = pygame.Color(  0, 255,   0)
+        self.BLUE  = pygame.Color(  0,   0, 255)
 
-# Set the height and width of the screen
-size = [ pygame.display.Info().current_w, pygame.display.Info().current_h ]
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.SRCALPHA)
+        pygame.init()
 
-status_surface = pygame.Surface([pygame.display.Info().current_w / 5, pygame.display.Info().current_h], pygame.SRCALPHA)
+        # Set the height and width of the screen
+        self.size = [pygame.display.Info().current_w, pygame.display.Info().current_h]
+        self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.SRCALPHA)
 
-pygame.display.set_caption("Orbits")
+        self.status_surface = pygame.Surface(
+            [pygame.display.Info().current_w / 5, pygame.display.Info().current_h], pygame.SRCALPHA)
 
-#background = pygame.image.load('space3.jpg').convert()
-#background = pygame.transform.scale(background, size)
+        pygame.display.set_caption("Orbits")
 
-# Loop until the user clicks the close button.
-done = False
+        #background = pygame.image.load('space3.jpg').convert()
+        #background = pygame.transform.scale(background, size)
 
-# Used to manage how fast the screen updates
-clock = pygame.time.Clock()
+        # Loop until the user clicks the close button.
+        self.done = False
 
-# Starting position of the circle
-circle_x = 50
-circle_y = 50
+        # Used to manage how fast the screen updates
+        self.clock = pygame.time.Clock()
 
-planet = []
-planet_color = pygame.Color(randint(0,255), randint(0,255), randint(0,255))
-# Speed and direction of circle
+        # Starting position of the circle
+        self.circle_x = 50
+        self.circle_y = 50
 
-dir_x = 0
-dir_y = 0
+        self.planet = []
+        self.planet_color = pygame.Color(randint(0, 255), randint(0, 255), randint(0, 255))
 
-theta = 0
-alpha = 0
+        # Speed and direction of circle
+        self.dir_x = 0
+        self.dir_y = 0
 
-v = 5
-a = 0
-t = 1
+        self.theta = 0
+        self.alpha = 0
 
-b_r = 25
-p_r = 5
-p_m = pow(10, 14) / 500
+        self.v = 5
+        self.a = 0
+        self.t = 1
 
-G = 6.674 * pow(10, -11)
-M = pow(10, 14)
+        self.b_r = 25
+        self.p_r = 5
+        self.p_m = pow(10, 14) / 500
 
-mouseClicked1 = False
-mouseClicked2 = False
-eaten = False
+        self.G = 6.674 * pow(10, -11)
+        self.M = pow(10, 14)
 
-# This is a font we use to draw text on the screen (size 36)
-#font = pygame.font.Font('freesansbold.ttf', 12)
+        self.mouseClicked1 = False
+        self.mouseClicked2 = False
+        self.eaten = False
 
-# Use this boolean variable to trigger if the game is over.
-game_over = False
+        # This is a font we use to draw text on the screen (size 36)
+        #font = pygame.font.Font('freesansbold.ttf', 12)
+
+        # Use this boolean variable to trigger if the game is over.
+        self.game_over = False
+
+        if __name__ == 'orbits_main':
+            self.main()
 
 
-def draw_circle(surface, color, center, radius, fill=False, border=False):
-    if fill:
-        gfxdraw.filled_circle(surface, int(center[0]), int(center[1]), radius, color)
-        if border:
+    def draw_circle(self, surface, color, center, radius, fill=False, border=False):
+        """Draw Circle"""
+        if fill:
+            gfxdraw.filled_circle(surface, int(center[0]), int(center[1]), radius, color)
+            if border:
+                gfxdraw.aacircle(surface, int(center[0]), int(center[1]), radius, color)
+        else:
             gfxdraw.aacircle(surface, int(center[0]), int(center[1]), radius, color)
-    else:
-        gfxdraw.aacircle(surface, int(center[0]), int(center[1]), radius, color)
 
-def draw_line(surface, color, p1, p2):
-    pygame.draw.aaline(surface, color, p1, p2)
+    def draw_line(self, surface, color, p1, p2):
+        """Draw line"""
+        pygame.draw.aaline(surface, color, p1, p2)
 
-def distance(p1, p2):
-    return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+    def distance(self, p1, p2):
+        """Calculate distance between two points"""
+        return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
-def angle(dy, dx):
-    return math.atan2(dy, dx)
+    def angle(self, dy, dx):
+        """Calculate slope of vector"""
+        return math.atan2(dy, dx)
 
-def collision(c1, r1, c2, r2):
-    if (
-        pow(c1[1] - c2[1], 2) + pow(c1[0] - c2[0], 2)
-        <=
-        pow(r1 + r2, 2)
-    ):
-        return True
+    def collision(self, c1, r1, c2, r2):
+        """Check Collision of planet and black hole"""
+        return bool(pow(c1[1] - c2[1], 2) + pow(c1[0] - c2[0], 2) <= pow(r1 + r2, 2))
 
-    else:
-        return False
+    def update_acceleration(self, i):
+        """Update acceleration of planet"""
+        a_x = 0
+        a_y = 0
+        alpha = 0
+        a = 0
 
-def update_acceleration(i):
-    global planet
+        if len(self.planet) > 0:
+            for j in range(0, len(self.planet)):
+                if j == i:
+                    continue
+                alpha = self.angle(
+                    self.planet[j]['y'] - self.planet[i]['y'],
+                    self.planet[j]['x'] - self.planet[i]['x'])
+                a = (self.G * self.p_m) / (
+                    pow(self.planet[j]['y'] - self.planet[i]['y'], 2)
+                    + pow(self.planet[j]['x'] - self.planet[i]['x'], 2))
+                a_x += a * math.cos(alpha)
+                a_y += a * math.sin(alpha)
 
-    a_x = 0
-    a_y = 0
-    alpha1 = 0
-    a1 = 0
-    if len(planet) > 0:
-        for j in range(0, len(planet)):
-            if j == i:
-                continue
-            alpha1 = angle(planet[j]['y'] - planet[i]['y'], planet[j]['x'] - planet[i]['x'])
-            a1 = \
-                (G * p_m) / (pow(planet[j]['y'] - planet[i]['y'], 2) + pow(planet[j]['x'] - planet[i]['x'], 2))
-            a_x += a1 * math.cos(alpha1)
-            a_y += a1 * math.sin(alpha1)
-    #planet[i]['alpha'] = \
-    #    angle(screen.get_height()/2 - planet[i]['y'], screen.get_width()/2 - planet[i]['x'])
+        alpha = self.angle(
+            self.screen.get_height()/2 - self.planet[i]['y'],
+            self.screen.get_width()/2 - self.planet[i]['x'])
 
-    alpha1 = \
-        angle(screen.get_height()/2 - planet[i]['y'], screen.get_width()/2 - planet[i]['x'])
+        a = (self.G * self.M) / (
+            pow(self.screen.get_height()/2 - self.planet[i]['y'], 2)
+            + pow(self.screen.get_width()/2 - self.planet[i]['x'], 2))
 
-    a1 = \
-        (G * M) / (pow(screen.get_height()/2 - planet[i]['y'], 2) + pow(screen.get_width()/2 - planet[i]['x'], 2))
+        a_x += a * math.cos(alpha)
+        a_y += a * math.sin(alpha)
+        self.planet[i]['acceleration'] = math.sqrt(pow(a_x, 2) + pow(a_y, 2))
+        self.planet[i]['alpha'] = self.angle(a_y, a_x)
 
-    a_x += a1 * math.cos(alpha1)
-    a_y += a1 * math.sin(alpha1)
+    def update_velocity(self, i):
+        """Update velocity of planet"""
+        self.planet[i]['velocity'] = math.sqrt(
+            pow(self.planet[i]['velocity'] * math.cos(self.planet[i]['theta'])
+            + self.planet[i]['acceleration'] * math.cos(self.planet[i]['alpha']) * self.t, 2)
+            + pow(self.planet[i]['velocity'] * math.sin(self.planet[i]['theta'])
+            + self.planet[i]['acceleration'] * math.sin(self.planet[i]['alpha']) * self.t, 2))
 
-    #planet[i]['acceleration'] = \
-    #    (G * M) / (pow(screen.get_height()/2 - planet[i]['y'], 2) + pow(screen.get_width()/2 - planet[i]['x'], 2))
+        self.planet[i]['theta'] = self.angle(
+            self.planet[i]['velocity'] * math.sin(self.planet[i]['theta'])
+            + self.planet[i]['acceleration'] * math.sin(self.planet[i]['alpha']) * self.t,
+            self.planet[i]['velocity'] * math.cos(self.planet[i]['theta'])
+            + self.planet[i]['acceleration'] * math.cos(self.planet[i]['alpha']) * self.t)
 
-    planet[i]['acceleration'] = math.sqrt(pow(a_x, 2) + pow(a_y, 2))
-    planet[i]['alpha'] = angle(a_y, a_x)
+    def update_position(self, i):
+        """Update position of planet"""
+        self.planet[i]['x'] += (
+            (self.planet[i]['velocity'] * math.cos(self.planet[i]['theta']) * self.t)
+            + (
+                0.5
+                * self.planet[i]['acceleration'] * math.cos(self.planet[i]['alpha'])
+                * pow(self.t, 2)))
 
-def update_velocity(i):
-    global planet
+        self.planet[i]['y'] += (
+            (self.planet[i]['velocity'] * math.sin(self.planet[i]['theta']) * self.t)
+            + (
+                0.5
+                * self.planet[i]['acceleration'] * math.sin(self.planet[i]['alpha'])
+                * pow(self.t, 2)))
 
-    planet[i]['velocity'] = \
-        math.sqrt(
-            pow( planet[i]['velocity'] * math.cos(planet[i]['theta']) + planet[i]['acceleration'] * math.cos(planet[i]['alpha']) * t, 2)
-            + pow( planet[i]['velocity'] * math.sin(planet[i]['theta']) + planet[i]['acceleration'] * math.sin(planet[i]['alpha']) * t, 2)
-        )
+    def initial_speed(self):
+        """Calculate initial speed of planet"""
+        self.v = (1 / 10) * math.sqrt(
+            pow(self.circle_x - self.dir_x, 2)
+            + pow(self.circle_y - self.dir_y, 2))
 
-    planet[i]['theta'] = \
-        angle(
-            planet[i]['velocity'] * math.sin(planet[i]['theta']) + planet[i]['acceleration'] * math.sin(planet[i]['alpha']) * t,
-            planet[i]['velocity'] * math.cos(planet[i]['theta']) + planet[i]['acceleration'] * math.cos(planet[i]['alpha']) * t
-        )
+    def game_over_text(self, fsize=40):
+        """Text to print when game is over"""
+        # Set the screen background
+        #screen.blit(background, (0, 0))
+        self.screen.fill((50, 50, 50))
+        # If game over is true, draw game over
+        font = pygame.font.Font('freesansbold.ttf', fsize)
+        text = font.render("Black Hole Wins", True, self.WHITE)
+        text_rect = text.get_rect()
+        text_x = self.screen.get_width() / 2 - text_rect.width / 2
+        text_y = self.screen.get_hei
+        self.screen.blit(text, [text_x, text_y])
 
-def update_position(i):
-    global planet
+    def closing_animation(self, fsize=40):
+        """Closing Animation"""
+        for i in range(0, int(self.screen.get_width()/2) - 10):
+            self.draw_circle(
+                self.screen,
+                self.BLACK,
+                [int(self.screen.get_width()/2), int(self.screen.get_height()/2)],
+                10 + i + 1,
+                True,
+                True)
+            pygame.display.flip()
 
-    planet[i]['x'] += (planet[i]['velocity'] * math.cos(planet[i]['theta']) * t) + (0.5 * planet[i]['acceleration'] * math.cos(planet[i]['alpha']) * pow(t, 2))
-    planet[i]['y'] += (planet[i]['velocity'] * math.sin(planet[i]['theta']) * t) + (0.5 * planet[i]['acceleration'] * math.sin(planet[i]['alpha']) * pow(t, 2))
-
-def initial_speed():
-    global v
-    v = math.sqrt( pow(circle_x - dir_x, 2) + pow(circle_y - dir_y, 2) ) * (1 / 10)
-
-def game_over_text(fsize=40):
-    # Set the screen background
-    #screen.blit(background, (0, 0))
-    screen.fill((50, 50, 50))
-    # If game over is true, draw game over
-    font = pygame.font.Font('freesansbold.ttf', fsize)
-    text = font.render("Black Hole Wins", True, WHITE)
-    text_rect = text.get_rect()
-    text_x = screen.get_width() / 2 - text_rect.width / 2
-    text_y = screen.get_hei
-    screen.blit(text, [text_x, text_y])
-
-def closing_animation(fsize=40):
-    for i in range(0, int(screen.get_width()/2) - 10):
-        draw_circle(screen, BLACK, [int(screen.get_width()/2), int(screen.get_height()/2)], 10 + i + 1, True, True)
+        font = pygame.font.Font('freesansbold.ttf', fsize)
+        text = font.render("Black Hole Wins", True, self.WHITE)
+        text_rect = text.get_rect()
+        text_x = self.screen.get_width() / 2 - text_rect.width / 2
+        text_y = self.screen.get_height() / 2 - text_rect.height / 2
+        self.screen.blit(text, [text_x, text_y])
         pygame.display.flip()
 
-    font = pygame.font.Font('freesansbold.ttf', fsize)
-    text = font.render("Black Hole Wins", True, WHITE)
-    text_rect = text.get_rect()
-    text_x = screen.get_width() / 2 - text_rect.width / 2
-    text_y = screen.get_height() / 2 - text_rect.height / 2
-    screen.blit(text, [text_x, text_y])
-    pygame.display.flip()
+        time.sleep(3)
 
-    time.sleep(3)
+    def main_surface_text(self, fsize=20):
+        """Main surface text"""
+        font = pygame.font.Font('freesansbold.ttf', fsize)
+        text = font.render("Press q to destroy universe", True, (200, 200, 200))
+        self.screen.blit(text, [0, 0])
 
-def main_surface_text(fsize=20):
-    font = pygame.font.Font('freesansbold.ttf', fsize)
-    text = font.render("Press q to destroy universe", True, (200, 200, 200))
-    #text_rect = text.get_rect()
-    #text_x = screen.get_width() / 2 - text_rect.width / 2
-    #text_y = screen.get_height() / 2 - text_rect.height / 2
-    screen.blit(text, [0, 0])
+    def status_surface_text(self, fsize=12):
+        """Status surface text"""
+        font = pygame.font.Font('freesansbold.ttf', fsize)
+        text1 = font.render("PLANET", True, self.WHITE)
+        text2 = font.render("SPEED", True, self.WHITE)
+        text3 = font.render("DISTANCE", True, self.WHITE)
+        sub_part = self.status_surface.get_width() / 3
+        text_x1 = 10
+        text_x2 = sub_part
+        text_x3 = sub_part * 2
+        text_y1 = text_y2 = text_y3 = 35
+        self.status_surface.blit(text1, [text_x1, text_y1])
+        self.status_surface.blit(text2, [text_x2, text_y2])
+        self.status_surface.blit(text3, [text_x3, text_y3])
 
-def status_surface_text(fsize=12):
-    font = pygame.font.Font('freesansbold.ttf', fsize)
-    text1 = font.render("PLANET", True, WHITE)
-    text2 = font.render("SPEED", True, WHITE)
-    text3 = font.render("DISTANCE", True, WHITE)
-    text_rect1 = text1.get_rect()
-    text_rect2 = text2.get_rect()
-    text_rect3 = text3.get_rect()
-    part = status_surface.get_width() / 3
-    text_x1 = 10
-    text_x2 = part
-    text_x3 = part * 2
-    text_y1 = text_y2 = text_y3 = 35
-    status_surface.blit(text1, [text_x1, text_y1])
-    status_surface.blit(text2, [text_x2, text_y2])
-    status_surface.blit(text3, [text_x3, text_y3])
+    def distance_text(self, surface, pos, i, fsize=12):
+        """Display planet's distance from black hole"""
+        dis = self.distance(
+            [self.planet[i]['x'], self.planet[i]['y']],
+            [self.screen.get_width()/2, self.screen.get_height()/2])
 
-def distance_text(surface, pos, i, fsize=12):
-    dis = distance([planet[i]['x'], planet[i]['y']], [screen.get_width()/2, screen.get_height()/2])
+        font = pygame.font.Font('freesansbold.ttf', fsize)
+        text1 = font.render("{0:.2f}".format(dis), True, self.WHITE)
+        text_rect1 = text1.get_rect()
+        text_x1 = pos[0]
+        text_y1 = pos[1] - text_rect1.height
+        surface.blit(text1, [text_x1, text_y1])
 
-    font = pygame.font.Font('freesansbold.ttf', fsize)
-    text1 = font.render("{0:.2f}".format(dis), True, WHITE)
-    text_rect1 = text1.get_rect()
-    text_x1 = pos[0]
-    text_y1 = pos[1] - text_rect1.height
-    surface.blit(text1, [text_x1, text_y1])
+    def speed_text(self, surface, pos, vel, fsize=12):
+        """Display planet's speed text"""
+        font = pygame.font.Font('freesansbold.ttf', fsize)
+        text1 = font.render("{0:.2f}".format(vel), True, self.WHITE)
+        text_rect1 = text1.get_rect()
+        text_x1 = pos[0]
+        text_y1 = pos[1] - text_rect1.height
+        surface.blit(text1, [text_x1, text_y1])
 
-def speed_text(surface, pos, vel=v, fsize=12):
-    font = pygame.font.Font('freesansbold.ttf', fsize)
-    text1 = font.render("{0:.2f}".format(vel), True, WHITE)
-    text_rect1 = text1.get_rect()
-    text_x1 = pos[0]
-    text_y1 = pos[1] - text_rect1.height
-    surface.blit(text1, [text_x1, text_y1])
-
-def crossed_limit(var):
-    if var >= 32700 or var <= -32700:
-        return True
-    else:
-        return False
-
-# -------- Main Program Loop -----------
-def main():
-    global done, mouseClicked1, mouseClicked2, planet_color, v, clock, circle_x, circle_y, planet, dir_x, dir_y, theta, alpha, a, t, b_r, p_r, p_m, G, M, eaten, game_over
-    while not done:
-
-        # Limit frames per second
-        clock.tick(60)
-
-        # --- Event Processing
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT 
-                or (event.type == pygame.KEYDOWN and event.key == pygame.K_q)
-            ):               
-                done = True
-                game_over = True
-
-            elif event.type == pygame.MOUSEMOTION:
-
-                if mouseClicked1:
-                    dir_x, dir_y = event.pos
-                    initial_speed()
-
-                else:
-                    circle_x, circle_y = event.pos
-
-            elif event.type == pygame.MOUSEBUTTONUP:
-
-                if not mouseClicked1:
-                    mouseClicked1 = True
-                    mouseClicked2 = False
-                    circle_x, circle_y = event.pos
-                    dir_x, dir_y = circle_x, circle_y
-
-                else:
-                    mouseClicked1 = False
-                    mouseClicked2 = True
-                    dir_x, dir_y = event.pos
-                    theta = angle(dir_y - circle_y, dir_x - circle_x)
-
-                    alpha = \
-                        angle(screen.get_height()/2 - circle_y, screen.get_width()/2 - circle_x)
-
-                    a = \
-                        (G * M) / (pow(screen.get_height()/2 - circle_y, 2) + pow(screen.get_width()/2 - circle_x, 2))
-
-                    planet.append( {'color': planet_color, 'x': circle_x, 'y': circle_y, 'velocity': v, 'theta': theta, 'acceleration': a, 'alpha': alpha} )
-                    circle_x, circle_y = dir_x, dir_y
-
-                    planet_color = (randint(0, 255), randint(0, 255), randint(0, 255))
-
-        # --- Game Logic
-
-        if not eaten:
-            # Actual logic
-            if len(planet) > 0:
-                p_i = 0
-                while p_i < len(planet):
-                    if collision( (screen.get_width()/2, screen.get_height()/2), b_r,
-                                (planet[p_i]['x'], planet[p_i]['y']), p_r
-                    ): 
-                        del planet[p_i]          
-                    else:
-                        update_position(p_i)
-                        if crossed_limit(planet[p_i]['x']) or crossed_limit(planet[p_i]['y']):
-                            del planet[p_i]
-                        else:
-                            update_acceleration(p_i)           
-                            update_velocity(p_i)
-                            p_i += 1
-
-            # --- Draw the frame
-
-            # Set the screen background
-            #screen.blit(background, (0, 0))
-            screen.fill((50, 50, 50))
-            status_surface.fill((0, 0, 0, 112))
-
-            # Draw the shapes
-            '''
-            draw_circle(screen, (0, 0, 0, 56), [screen.get_width()/2, screen.get_height()/2], 100, True)
-            draw_circle(screen, (0, 0, 0, 112), [screen.get_width()/2, screen.get_height()/2], 70, True)
-            draw_circle(screen, (0, 0, 0, 170), [screen.get_width()/2, screen.get_height()/2], 40, True)
-            '''
-            #drawing black hole
-            draw_circle(screen, BLACK, [screen.get_width()/2, screen.get_height()/2], 20, True)
-            #black hole aura
-            for i in range(1, 50):
-                draw_circle(screen, (0, 0, 0, i), [screen.get_width()/2, screen.get_height()/2], 50-i, True)
-
-            if mouseClicked1 and not mouseClicked2:
-                draw_line(screen, WHITE, [circle_x, circle_y], [dir_x, dir_y])
-                speed_text(screen, [dir_x, dir_y], v)
-
-            if len(planet) > 0:
-                for i in range(0, len(planet)):
-                    draw_line(screen, WHITE, [planet[i]['x'], planet[i]['y']], [planet[i]['x'] + 25, planet[i]['y'] - 10])
-                    speed_text(screen, [planet[i]['x'] + 25, planet[i]['y'] - 10], planet[i]['velocity'])
-                    draw_circle(screen, planet[i]['color'], [planet[i]['x'], planet[i]['y']], 5, True, True)
-                    #status surface
-                    draw_circle(status_surface, planet[i]['color'], [15, 65+(i*25)], 5, True, True)
-                    speed_text(status_surface, [status_surface.get_width()/3, 73+(i*25)], planet[i]['velocity'])
-                    distance_text(status_surface, [2*status_surface.get_width()/3, 73+(i*25)], i)
-
-            draw_circle(screen, planet_color, [circle_x, circle_y], 5, True, True)
-            #status surface
-            #screen.blit(status_surface, (0, 0))
-
-        # Till window is not closed, draw this stuff.
-        if not done:
-            #status surface
-            status_surface_text()
-            screen.blit(status_surface, (0, 0))
-            
-            main_surface_text()
-            pygame.display.flip()
+    def crossed_limit(self, var):
+        """Checking int08's limit"""
+        if var >= 32700 or var <= -32700:
+            return True
         else:
-            pass#closing_animation()
+            return False
+
+    # -------- Main Program Loop -----------
+    def main(self):
+        """Main function"""
+        while not self.done:
+
+            # Limit frames per second
+            self.clock.tick(60)
+
+            # --- Event Processing
+            for event in pygame.event.get():
+                if (
+                    event.type == pygame.QUIT
+                    or (event.type == pygame.KEYDOWN and event.key == pygame.K_q)):
+
+                    self.done = True
+                    self.game_over = True
+
+                elif event.type == pygame.MOUSEMOTION:
+
+                    if self.mouseClicked1:
+                        self.dir_x, self.dir_y = event.pos
+                        self.initial_speed()
+
+                    else:
+                        self.circle_x, self.circle_y = event.pos
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+
+                    if not self.mouseClicked1:
+                        self.mouseClicked1 = True
+                        self.mouseClicked2 = False
+                        self.circle_x, self.circle_y = event.pos
+                        self.dir_x, self.dir_y = self.circle_x, self.circle_y
+
+                    else:
+                        self.mouseClicked1 = False
+                        self.mouseClicked2 = True
+                        self.dir_x, self.dir_y = event.pos
+                        self.theta = self.angle(
+                            self.dir_y - self.circle_y,
+                            self.dir_x - self.circle_x)
+
+                        self.alpha = self.angle(
+                            self.screen.get_height()/2 - self.circle_y,
+                            self.screen.get_width()/2 - self.circle_x)
+
+                        self.a = (self.G * self.M) / (
+                            pow(self.screen.get_height()/2 - self.circle_y, 2)
+                            + pow(self.screen.get_width()/2 - self.circle_x, 2))
+
+                        self.planet.append({
+                            'color': self.planet_color,
+                            'x': self.circle_x,
+                            'y': self.circle_y,
+                            'velocity': self.v,
+                            'theta': self.theta,
+                            'acceleration': self.a,
+                            'alpha': self.alpha})
+                        
+                        self.circle_x, self.circle_y = self.dir_x, self.dir_y
+
+                        self.planet_color = (randint(0, 255), randint(0, 255), randint(0, 255))
+
+            # --- Game Logic
+
+            if not self.eaten:
+                # Actual logic
+                if len(self.planet) > 0:
+                    p_i = 0
+                    while p_i < len(self.planet):
+                        if self.collision(
+                            (self.screen.get_width()/2, self.screen.get_height()/2),
+                            self.b_r,
+                            (self.planet[p_i]['x'], self.planet[p_i]['y']),
+                            self.p_r):
+                            
+                            del self.planet[p_i]
+
+                        else:
+                            self.update_position(p_i)
+                            if (
+                                self.crossed_limit(self.planet[p_i]['x'])
+                                or self.crossed_limit(self.planet[p_i]['y'])):
+
+                                del self.planet[p_i]
+
+                            else:
+                                self.update_acceleration(p_i)           
+                                self.update_velocity(p_i)
+                                p_i += 1
+
+                # --- Draw the frame
+
+                # Set the screen background
+                # screen.blit(background, (0, 0))
+                self.screen.fill((50, 50, 50))
+                self.status_surface.fill((0, 0, 0, 112))
+
+                # Draw the shapes
+                # drawing black hole
+                self.draw_circle(
+                    self.screen, self.BLACK,
+                    [self.screen.get_width()/2, self.screen.get_height()/2],
+                    20,
+                    True)
+
+                # black hole aura
+                for i in range(1, 50):
+                    self.draw_circle(
+                        self.screen,
+                        (0, 0, 0, i),
+                        [self.screen.get_width()/2, self.screen.get_height()/2],
+                        50-i,
+                        True)
+
+                if self.mouseClicked1 and not self.mouseClicked2:
+                    self.draw_line(
+                        self.screen,
+                        self.WHITE,
+                        [self.circle_x, self.circle_y],
+                        [self.dir_x, self.dir_y])
+
+                    self.speed_text(self.screen, [self.dir_x, self.dir_y], self.v)
+
+                if len(self.planet) > 0:
+                    for i in range(0, len(self.planet)):
+                        self.draw_line(
+                            self.screen,
+                            self.WHITE,
+                            [self.planet[i]['x'], self.planet[i]['y']],
+                            [self.planet[i]['x'] + 25, self.planet[i]['y'] - 10])
+
+                        self.speed_text(
+                            self.screen,
+                            [self.planet[i]['x'] + 25, self.planet[i]['y'] - 10],
+                            self.planet[i]['velocity'])
+
+                        self.draw_circle(
+                            self.screen,
+                            self.planet[i]['color'],
+                            [self.planet[i]['x'], self.planet[i]['y']],
+                            5,
+                            True,
+                            True)
+
+                        #status surface
+                        self.draw_circle(
+                            self.status_surface,
+                            self.planet[i]['color'],
+                            [15, 65+(i*25)],
+                            5,
+                            True,
+                            True)
+
+                        self.speed_text(
+                            self.status_surface,
+                            [self.status_surface.get_width()/3, 73+(i*25)],
+                            self.planet[i]['velocity'])
+
+                        self.distance_text(
+                            self.status_surface,
+                            [2*self.status_surface.get_width()/3, 73+(i*25)],
+                            i)
+
+                self.draw_circle(
+                    self.screen,
+                    self.planet_color,
+                    [self.circle_x, self.circle_y],
+                    5,
+                    True,
+                    True)
+
+            # Till window is not closed, draw this stuff.
+            if not self.done:
+                #status surface
+                self.status_surface_text()
+                self.screen.blit(self.status_surface, (0, 0))
+
+                self.main_surface_text()
+                pygame.display.flip()
+            else:
+                self.closing_animation()
 
 
-    # on exit.
-    pygame.quit()
-    sys.exit(0)
+        # on exit.
+        pygame.quit()
+        #sys.exit(0)
 
 if __name__ == '__main__':
-    main()
+    O = Orbits()
+    O.main()
