@@ -1,12 +1,6 @@
-"""
--*- coding: utf-8 -*-
-----------------------------------------------
---- Author         : Mayank Lad
---- Mail           : mayanklad12@gmail.com
---- Github         : mayanklad
-----------------------------------------------
-"""
-# Form implementation generated from reading ui file '/home/mayank/PythonProjects/pygame/Orbits/ui.ui'
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file '/home/mayank/PythonProjects/pygame/Orbits/main.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
@@ -14,7 +8,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from orbits_main import Orbits
-#import orbits_main
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -26,8 +19,13 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName("gridLayout")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
+        self.gridLayout.addWidget(self.pushButton, 1, 0, 1, 1)
         self.pushButton.clicked.connect(Orbits)
-        self.gridLayout.addWidget(self.pushButton, 0, 0, 1, 1)
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setTextFormat(QtCore.Qt.AutoText)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
@@ -44,6 +42,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Orbits"))
         self.pushButton.setText(_translate("MainWindow", "Start"))
+        self.label.setText(_translate("MainWindow", "Orbits"))
 
 
 if __name__ == "__main__":
