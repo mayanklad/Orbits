@@ -317,6 +317,10 @@ class Orbits:
             [width/2 + text4_rect.width/2 + 11, height - 55],
             [width/2 + text4_rect.width/2 + 11, height - 45])
 
+        '''text6 = font.render("{0:.2f}".format(self.clock.get_fps()), True, self.WHITE)
+        text6_rect = text6.get_rect()
+        self.status_surface.blit(text6, [0, height-text6_rect.height])'''
+
     def distance_text(self, surface, pos, i, fsize=11):
         """Display planet's distance from black hole"""
         font = pygame.font.Font('freesansbold.ttf', fsize)
