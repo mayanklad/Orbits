@@ -1,9 +1,9 @@
 """
 -*- coding: utf-8 -*-
 ----------------------------------------------
---- Author         : Mayank Lad
+--- Author         : Mayank Ashokkumar Lad
 --- Mail           : mayanklad12@gmail.com
---- Github         : https://github.com/mayanklad?tab=repositories
+--- Github         : https://github.com/mayanklad
 --- LinkedIn       : https://www.linkedin.com/in/mayank-lad-602568151
 ----------------------------------------------
 """

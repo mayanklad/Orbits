@@ -1,9 +1,9 @@
 """
 -*- coding: utf-8 -*-
 ----------------------------------------------
---- Author         : Mayank Lad
+--- Author         : Mayank Ashokkumar Lad
 --- Mail           : mayanklad12@gmail.com
---- Github         : https://github.com/mayanklad?tab=repositories
+--- Github         : https://github.com/mayanklad
 --- LinkedIn       : https://www.linkedin.com/in/mayank-lad-602568151
 ----------------------------------------------
 """
@@ -317,10 +317,6 @@ class Orbits:
             [width/2 + text4_rect.width/2 + 11, height - 55],
             [width/2 + text4_rect.width/2 + 11, height - 45])
 
-        '''text6 = font.render("{0:.2f}".format(self.clock.get_fps()), True, self.WHITE)
-        text6_rect = text6.get_rect()
-        self.status_surface.blit(text6, [0, height-text6_rect.height])'''
-
     def distance_text(self, surface, pos, i, fsize=11):
         """Display planet's distance from black hole"""
         font = pygame.font.Font('freesansbold.ttf', fsize)
@@ -375,10 +371,6 @@ class Orbits:
         font = pygame.font.Font('freesansbold.ttf', fsize)
         text1 = font.render(self.planet[i]['name'], True, color, background)
         text_rect1 = text1.get_rect()
-        '''if self.planet[i]['x'] < self.screen.get_width()/2:
-            text_x1 = pos[0] - text_rect1.width
-        else:
-            text_x1 = pos[0]'''
         text_x1 = 0
         if surface == self.screen and connecting_line:
             text_x1 = pos[0] - text_rect1.width/2
@@ -390,7 +382,7 @@ class Orbits:
     def planet_remove_text(self, name, reason, fsize=11):
         """Message to print when planet is eaten or escaped"""
         width = self.screen.get_width()
-        height = self.screen.get_height()
+        #height = self.screen.get_height()
         font = pygame.font.Font('freesansbold.ttf', fsize)
         text1 = None
         if reason == 'eaten':
@@ -576,16 +568,6 @@ class Orbits:
                     for i in range(0, len(self.planet)):
 
                         # For main surface
-                        '''self.draw_line(
-                            self.screen,
-                            self.WHITE,
-                            [self.planet[i]['x'], self.planet[i]['y']],
-                            [self.planet[i]['x'] + 25, self.planet[i]['y'] - 10])
-
-                        self.speed_text(
-                            self.screen,
-                            [self.planet[i]['x'] + 25, self.planet[i]['y'] - 10],
-                            self.planet[i]['velocity'])'''
                         if not self.out_of_screen(i):
                             self.name_text(
                                 self.screen,
