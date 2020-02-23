@@ -1,5 +1,6 @@
-.vscode/settings.json
-
+.vscode/
+build/
+Orbits.spec
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

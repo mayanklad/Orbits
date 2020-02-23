@@ -62,6 +62,10 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+
+    if getattr(sys, 'frozen', False):
+        os.chdir(os.path.dirname(sys.executable))
+    
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

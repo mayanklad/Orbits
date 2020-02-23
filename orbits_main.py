@@ -232,7 +232,7 @@ class Orbits:
         #screen.blit(background, (0, 0))
         self.screen.fill((50, 50, 50))
         # If game over is true, draw game over
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text = font.render("Black Hole Wins", True, self.WHITE)
         text_rect = text.get_rect()
         text_x = self.screen.get_width() / 2 - text_rect.width / 2
@@ -251,7 +251,7 @@ class Orbits:
                 True)
             pygame.display.flip()
 
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text = font.render("Black Hole Wins", True, self.WHITE)
         text_rect = text.get_rect()
         text_x = self.screen.get_width() / 2 - text_rect.width / 2
@@ -263,14 +263,14 @@ class Orbits:
 
     def main_surface_text(self, fsize=20):
         """Main surface text"""
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text = font.render("Press q to destroy universe", True, (200, 200, 200))
         self.screen.blit(text, [0, 0])
 
     def status_surface_text(self, fsize=11):
         """Status surface text"""
         # Planet details columns
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text1 = font.render("PLANET", True, self.WHITE)
         text2 = font.render("SPEED (Mm/s)", True, self.WHITE)
         text3 = font.render("DISTANCE (Mm)", True, self.WHITE)
@@ -319,7 +319,7 @@ class Orbits:
 
     def distance_text(self, surface, pos, i, fsize=11):
         """Display planet's distance from black hole"""
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         dis = None
         text1 = None 
         if surface == self.screen:
@@ -341,7 +341,7 @@ class Orbits:
 
     def life_text(self, surface, pos, i, fsize=11):
         """Display planet's life"""
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text1 = font.render(
             "{0:.1f} earth year(s)".format(self.planet[i]['life']), True, self.WHITE)
         text_rect1 = text1.get_rect()
@@ -352,7 +352,7 @@ class Orbits:
 
     def speed_text(self, surface, pos, vel, fsize=11):
         """Display planet's speed text"""
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text1 = None
         correction = 0
         if surface == self.screen:
@@ -368,7 +368,7 @@ class Orbits:
 
     def name_text(self, surface, color, pos, i, background=None, fsize=11, connecting_line=False):
         """Display planet's name"""
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text1 = font.render(self.planet[i]['name'], True, color, background)
         text_rect1 = text1.get_rect()
         text_x1 = 0
@@ -383,7 +383,7 @@ class Orbits:
         """Message to print when planet is eaten or escaped"""
         width = self.screen.get_width()
         #height = self.screen.get_height()
-        font = pygame.font.Font('freesansbold.ttf', fsize)
+        font = pygame.font.Font('./data/fonts/freesansbold.ttf', fsize)
         text1 = None
         if reason == 'eaten':
             text1 = font.render("Planet {} was EATEN by BLACK HOLE".format(name), True, self.WHITE)
