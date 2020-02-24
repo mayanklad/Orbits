@@ -1,7 +1,7 @@
 
 ---
 
-***"The developing is on progress! Stay updated for more features and cleaner code."***
+***"The developement is in progress! Stay updated for more features and cleaner code."***
 
 ---
 
